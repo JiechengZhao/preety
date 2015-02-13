@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>pixi.js example 1</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+        }
+    </style>
+    <script src="../../bin/pixi.dev.js"></script>
+    <script src="list.js"></script>
+
+</head>
+<body>
+    <script>
+    // create an new instance of a pixi stage
+    var stage = new PIXI.Stage(0xFFFFFF);
+
+    // create a renderer instance
+    var renderer = PIXI.autoDetectRenderer(640, 960);
+
+    // add the renderer view element to the DOM
+    document.body.appendChild(renderer.view);
+
+    requestAnimFrame(animate);
+
+    // create a texture from an image path
+    
+
+    // create a new Sprite using the texture
+
+    var list = new ImgList(960);
+
+    for (var i = 1; i <= 11; i++) {
+        var texture = PIXI.Texture.fromImage(i+".jpg");
+        if (!(texture)){
+            break;
+        }
+        var bunny  = new Bunny(texture);
+        stage.addChild(bunny);
+        list.push(bunny)
+    }
+
+    list[0].position.y = 0 ;
+
+    var count = 0
+    function animate() {
+        setTimeout(function(){
+            requestAnimFrame(animate);
+        },10);
+        list.resetPosition(count)
+
+        // render the stage
+        count += 10
+        renderer.render(stage);
+    }
+    </script>
+
+    </body>
+</html>
