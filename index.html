@@ -17,6 +17,7 @@
     <script>
     // create an new instance of a pixi stage
     var stage = new PIXI.Stage(0xFFFFFF);
+    stage.interactive = true;
 
     // create a renderer instance
     var renderer = PIXI.autoDetectRenderer(640, 960);
@@ -27,11 +28,13 @@
     requestAnimFrame(animate);
 
     // create a texture from an image path
-    
-
     // create a new Sprite using the texture
 
     var list = new ImgList(960);
+
+    var isdown;
+
+
 
     for (var i = 1; i <= 11; i++) {
         var texture = PIXI.Texture.fromImage(i+".jpg");
@@ -45,15 +48,33 @@
 
     list[0].position.y = 0 ;
 
-    var count = 0
-    function animate() {
-        setTimeout(function(){
-            requestAnimFrame(animate);
-        },10);
-        list.resetPosition(count)
+    var world = new World(960,10)
 
-        // render the stage
-        count += 10
+    stage.touchstart = stage.mousedown = function(data) {
+        isdown = {}
+        isdown.y = data.global.y + world.get()
+    };
+
+    stage.touchmove = stage.mousemove = function(data) {
+        if (isdown) {
+            world.set(-data.global.y+isdown.y)
+        }
+    };
+
+    stage.touchend = stage.mouseup = function(data) {
+        isdown = null
+    };
+
+    var time = 0
+    function animate() {
+        requestAnimFrame(animate);
+        time++;
+        
+        if (isdown){
+           list.resetPosition(world.get()) 
+        }else{
+           list.resetPosition(world.next()) 
+        }
         renderer.render(stage);
     }
     </script>
